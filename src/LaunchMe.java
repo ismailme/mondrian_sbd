@@ -2,8 +2,17 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.Random;
+import java.util.TreeMap;
+import java.util.Map.Entry;
+
+
 
 
 public class LaunchMe {
@@ -74,19 +83,84 @@ public class LaunchMe {
 		return (int)(Math.random() * range) + min;
 	}
 	
+	//frequencySet
+	static Map<Integer, Integer> frequencySet(Nuplet [] nu, int dim) {
+		Map<Integer, Integer> frequencyset = new HashMap<Integer,Integer>();
+		//calcul de frequence de valeur distincts
+		for (int i=0; i< nu.length;i++){
+			int cle;
+			if (dim == 1)
+				cle = nu[i].getQi1();
+			else
+				cle = nu[i].getQi2();
+
+			Integer v = frequencyset.get(cle);
+			v++;
+			frequencyset.put(cle, v);
+		}
+
+		return frequencyset;
+		}
+	
+	
 	//choosedimension
-		public ClasseEqui chooseDimension(Nuplet nu){
+		public static int chooseDimension(Nuplet [] nu){
+			int min1 = 999999;
+			int max1 = -1;
+			int min2 = 999999;
+			int max2 = -1;
+			for (int i=0; i< nu.length;i++){
+				if(nu[i].getQi1()< min1)
+					min1 = nu[i].getQi1();
+				
+				 if(nu[i].getQi1() > max1)
+					max1 =nu[i].getQi1();
+				
+				if(nu[i].getQi2() < min2)
+					min2 =nu[i].getQi1();
+				
+				if(nu[i].getQi1() > max2)
+					max2 = nu[i].getQi1();
+			}
+			//retourner la dimension la plus large
+			if(max1-min1> max2-min2)
+				return 1;
+			else
+				return 2;
+		}
+		
+		
+	
+	//median 
+	public static int findMedian(Map<Integer, Integer> frequency,int taille){
+		
+			int keyMadian = -1;
+			int sum = 0;
+			Iterator<Entry<Integer, Integer>> it = frequency.entrySet().iterator();
+			while (it.hasNext() && sum<taille/2){
+				Entry<Integer, Integer> entry = it.next();
+				keyMadian = entry.getKey();
+				sum += entry.getValue();
+			}
+			return keyMadian;
+		}
+	
+	//Mondrian
+	public static void mondrian(Nuplet [] nu, int k){
+		int dim = chooseDimension(nu);
+		Map<Integer, Integer> frequency = frequencySet(nu, dim);
+		int median = findMedian(frequency, nu.length);
+		//List<Nuplet> L=new List<Nuplet>();
+		//List<Nuplet> R=new List<Nuplet>();
+		if(dim == 1){
 			
-			return null;
+		}
 			
 		}
 		
 	
-	//mondrian hjkhj
-	public ClasseEqui mondrian(Nuplet nu,int k){
-		return null;
 		
-	}
+	
 	
 	
 
@@ -118,9 +192,11 @@ public class LaunchMe {
 		bw.append (Arrays.toString(tableau) );
 		bw.flush();
 		bw.close();
-
-
+		 //change array to list
+		List classequi = Arrays.asList(tableau);
 	}
+	
+			
 
 
 }
