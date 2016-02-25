@@ -18,6 +18,7 @@ import java.util.Map.Entry;
 public class LaunchMe {
 
 	int n, minQUID1, maxQUID1,minQUID2, maxQUID2, nbSD, k;
+	static Nuplet[] classEq;
 
 
 
@@ -31,6 +32,7 @@ public class LaunchMe {
 		this.maxQUID2 = maxQUID2;
 		this.nbSD = nbSD;
 		this.k = k;
+		
 	}
 
 
@@ -134,28 +136,57 @@ public class LaunchMe {
 	//median 
 	public static int findMedian(Map<Integer, Integer> frequency,int taille){
 		
-			int keyMadian = -1;
-			int sum = 0;
+			int Madian = 0;
+			int n = 0;
 			Iterator<Entry<Integer, Integer>> it = frequency.entrySet().iterator();
-			while (it.hasNext() && sum<taille/2){
-				Entry<Integer, Integer> entry = it.next();
-				keyMadian = entry.getKey();
-				sum += entry.getValue();
-			}
-			return keyMadian;
+			while (it.hasNext()){
+				if(n<=taille/2){
+				Entry<Integer, Integer> e = it.next();
+				Madian = e.getKey();
+				n += e.getValue();
+			}}
+			return Madian;
 		}
 	
 	//Mondrian
 	public static void mondrian(Nuplet [] nu, int k){
+		if(k>nu.length/2)
+		{  classEq = nu;}
 		int dim = chooseDimension(nu);
 		Map<Integer, Integer> frequency = frequencySet(nu, dim);
 		int median = findMedian(frequency, nu.length);
-		//List<Nuplet> L=new List<Nuplet>();
-		//List<Nuplet> R=new List<Nuplet>();
+		Nuplet[] L=null;
+		Nuplet[] R=null;
+		int il=0;
+		int ir=0;
+		
 		if(dim == 1){
+			for (int i=0; i< nu.length;i++){
+				if(nu[i].getQi1() <= median){
+					L[il]=nu[i];
+					il++;
+				}else{
+					R[ir]=nu[i];
+					ir++;
+				}
+			}
 			
 		}
+		else{
+			for (int i=0; i< nu.length;i++){
+				if(nu[i].getQi1() <= median){
+					R[ir]=nu[i];
+					ir++;
+				}else{
+					L[il]=nu[i];
+					il++;
+				}
+			}
 			
+		}
+		
+		mondrian(L,k);
+		mondrian(R,k);
 		}
 		
 	
@@ -192,8 +223,11 @@ public class LaunchMe {
 		bw.append (Arrays.toString(tableau) );
 		bw.flush();
 		bw.close();
+		
 		 //change array to list
-		List classequi = Arrays.asList(tableau);
+		//List classequi = Arrays.asList(tableau);
+		mondrian(tableau,launchme.getK());
+		System.out.println(Arrays.toString(launchme.classEq));
 	}
 	
 			
