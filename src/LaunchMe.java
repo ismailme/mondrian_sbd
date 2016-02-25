@@ -82,7 +82,7 @@ public class LaunchMe {
 		}
 		
 	
-	//mondrian
+	//mondrian hjkhj
 	public ClasseEqui mondrian(Nuplet nu,int k){
 		return null;
 		
